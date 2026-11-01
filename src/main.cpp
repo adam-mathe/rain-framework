@@ -40,7 +40,7 @@ int main()
     }
 
     // Shader
-    Shader base_program = Shader("base.vert", "base.frag");
+    Shader base_program = Shader("shaders/base.vert", "shaders/base.frag");
 
     base_program.use();
 
@@ -61,7 +61,7 @@ int main()
 
     // Load an image and create a texture
     int w, h, channels;
-    unsigned char* image_data = stbi_load("magma.png", &w, &h, &channels, 0);
+    unsigned char* image_data = stbi_load("assets/magma.png", &w, &h, &channels, 0);
 
     GLuint texture;
     glGenTextures(1, &texture); // Give 'texture' a unique ID that OpenGL can use to reference it

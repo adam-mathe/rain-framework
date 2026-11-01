@@ -9,8 +9,8 @@ Shader::Shader(std::string vertex_path, std::string fragment_path)
     id = glCreateProgram();
 
     // Load the shader source code
-    std::string vertex_source_string = load_file("base.vert");
-    std::string fragment_source_string = load_file("base.frag");
+    std::string vertex_source_string = load_file(vertex_path);
+    std::string fragment_source_string = load_file(fragment_path);
 
     const GLchar* vertex_source_pointer = vertex_source_string.c_str();
     const GLchar* fragment_source_pointer = fragment_source_string.c_str();
