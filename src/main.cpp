@@ -1,11 +1,6 @@
-#include <iostream>
-#include <string>
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include "shader.hpp"
 #include "linear.hpp"
+#include "rain.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -26,21 +21,10 @@ static const GLuint indices[] =
 
 int main()
 {
-    // Create our window
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // OpenGL 4.1 is the latest version supported on MacOS
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    GLFWwindow* window = glfwCreateWindow(640, 480, "Window Title", NULL, NULL);
-    glfwMakeContextCurrent(window);
-
-    // Initalize GLAD so we can access OpenGL functions
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initalize GLAD";
-    }
+    rain::Application my_game(640, 480, "My Game Name");
 
     // Shader
-    Shader base_program = Shader("shaders/base.vert", "shaders/base.frag");
+    Shader base_program("shaders/base.vert", "shaders/base.frag");
 
     base_program.use();
 
@@ -72,17 +56,19 @@ int main()
     stbi_image_free(image_data);
 
     // Matrix tests
-    linear::mat4 mat = linear::identity();
+    linear::mat4 model = linear::identity();
+    linear::mat4 projection = linear::identity();
 
-    linear::scale(mat, linear::vec3(2.0, 2.0, 2.0));
+    linear::scale(model, linear::vec3(128.0, 128.0, 1.0));
 
-    linear::print_mat4(mat);
+    linear::scale(projection, linear::vec3(1 / 320.0, 1 / 240.0, 1.0));
 
     // Give the matrix to the shader
-    base_program.setMat4("model", mat);
+    base_program.setMat4("model", model);
+    base_program.setMat4("projection", projection);
 
     // Main window loop
-    while(!glfwWindowShouldClose(window))
+    while(my_game.is_running())
     {
         glClearColor(0.1f, 0.05f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -99,8 +85,7 @@ int main()
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        my_game.present();
     }
 
     return 0;
