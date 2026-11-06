@@ -7,6 +7,7 @@
 
 static const GLfloat vertices[] =
 {
+    // Position         // UV
     -0.5f,  0.5f, 0.0f, 0.0f, 0.0f, // Top left
      0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top right
      0.5f, -0.5f, 0.0f, 1.0f, 1.0f, // Bottom right
@@ -53,6 +54,12 @@ int main()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    // 'texture' stores a unique unsigned int which OpenGL needs to have to fetch texture data
+
+    // Pseudo
+    // my_game->resources.generate_resource("assets/magma.png", rain::RESOURCE_TYPE.TEXTURE, "magma");
+    // glBindTexture(GL_TEXTURE_2D, my_game->resources.fetch("magma"))
+
     stbi_image_free(image_data);
 
     // Matrix tests
@@ -60,7 +67,6 @@ int main()
     linear::mat4 projection = linear::identity();
 
     linear::scale(model, linear::vec3(128.0, 128.0, 1.0));
-
     linear::scale(projection, linear::vec3(1 / 320.0, 1 / 240.0, 1.0));
 
     // Give the matrix to the shader
@@ -75,10 +81,7 @@ int main()
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glActiveTexture(GL_TEXTURE0);
+        //glActiveTexture(GL_TEXTURE0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

@@ -4,6 +4,24 @@
 
 namespace rain
 {
+    enum RESOURCE_TYPE
+    {
+        TEXTURE
+    };
+
+    class ResourceManager
+    {
+        public:
+            void generate_resource(const std::string& path, rain::RESOURCE_TYPE type, const std::string& id)
+            {
+                // if type == rain::RESOURCE_TYPE::TEXTURE
+                //
+                // Maybe we can hash their string id and use a hash map
+            }
+        private:
+            unsigned int resources[];
+    };
+
     class Application
     {
         public:
@@ -36,5 +54,6 @@ namespace rain
 
         private:
             GLFWwindow* window;
+            ResourceManager* resources;
     };
 }
