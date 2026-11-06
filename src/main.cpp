@@ -54,12 +54,6 @@ int main()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    // 'texture' stores a unique unsigned int which OpenGL needs to have to fetch texture data
-
-    // Pseudo
-    // my_game->resources.generate_resource("assets/magma.png", rain::RESOURCE_TYPE.TEXTURE, "magma");
-    // glBindTexture(GL_TEXTURE_2D, my_game->resources.fetch("magma"))
-
     stbi_image_free(image_data);
 
     // Matrix tests
@@ -73,23 +67,25 @@ int main()
     base_program.setMat4("model", model);
     base_program.setMat4("projection", projection);
 
+    // Tell OpenGL how to interpret our vertex data
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
     // Main window loop
     while(my_game.is_running())
     {
         glClearColor(0.1f, 0.05f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        //glActiveTexture(GL_TEXTURE0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
 
         my_game.present();
     }
+
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
 
     return 0;
 }
